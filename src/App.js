@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import 'bulma/css/bulma.min.css';
+import Login from './Components/Login'
+import User from "./Components/User"
+import Admin from "./Components/Admin"
+import React, { useEffect, useState } from "react"
+import { Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <body>
+      <div className="section">
+        <div className="container">
+          <main>
+            <BrowserRouter>
+              <Routes>
+                <Route index path="/" element={<Login />} />
+                <Route path="/user" element={<User />} />
+                <Route path="/admin" element={<Admin />} />
+              </Routes>
+            </BrowserRouter>
+          </main>
+        </div>
+      </div>
+    </body>
+  )
 }
 
 export default App;
