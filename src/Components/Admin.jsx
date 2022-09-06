@@ -6,6 +6,7 @@ export default function Admin(params) {
     const [user, setUser] = useState({});
     const [users, setUsers] = useState([]);
     const [selectedPayments, setSelectedPayments] = useState([]);
+    const [reload, setReload] = useState(false);
     var newUser = {}
     var newPayment = {}
     const ADD_USER = gql`
@@ -31,6 +32,8 @@ export default function Admin(params) {
                 user: newUser
             }
         })
+        setReload(!reload)
+        console.log(addResp)
     }
     
     const ADD_PAYMENT = gql`
@@ -56,6 +59,7 @@ export default function Admin(params) {
                 payment: newPayment
             }
         })
+        setReload(!reload)
         console.log(addPaymentResp)
     }
 
@@ -94,15 +98,15 @@ export default function Admin(params) {
     const { dataUsers, loadingUsers, errorUsers } = useQuery(GET_USERS, {
         onCompleted: (data) => {
             setUsers(data.users)
+            console.log(data)
         }
-    });
+    }, [reload]);
 
-    console.log(selectedPayments)
 
     //console.log(users.find(e => e.usename === selectedPayments))
 
     if (loading) return <progress className="progress is-medium is-dark" max="100">45%</progress>
-    if (error) return <div>Error</div>
+    if (error) return <div>Error {error.message}</div>
     if(user.isAdmin !== true) return <div>Přístup odepřen!</div>
 
     return (
@@ -280,7 +284,7 @@ export default function Admin(params) {
                                                 <tr>
                                                     <td>{payment.month}</td>
                                                     <td>{payment.year}</td>
-                                                    <td>vy vývoji</td>
+                                                    <td>ve vývoji</td>
                                                 </tr>
                                             ))}
                                         </tbody>

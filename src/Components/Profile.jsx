@@ -28,6 +28,7 @@ export default function Profile(props) {
 
 
     async function LogOut() {
+        console.log(localStorage.getItem(TOKEN_STORAGE_KEY));
 		localStorage.removeItem(TOKEN_STORAGE_KEY)
 		navigate("/");
 	}

@@ -9,17 +9,19 @@ export default function Login(params) {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [errorMessage, serErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
 	const TOKEN_STORAGE_KEY = "token-storage-key"
     async function GetJWT() {
+        setLoading(true);
           axios.post('https://platby.herokuapp.com/login', {
             username: username,
             password: password
           }, {headers: { 'Content-Type': 'application/json'}})
           .then(function (response) {
-            console.log(response.data.access_token);
             localStorage.setItem(TOKEN_STORAGE_KEY, response.data.access_token)
             setError(false);
+            //setLoading(false);
             if (response.data.isAdmin)  {navigate("admin");}
             else {navigate("user")}
             window.location.reload();
@@ -28,9 +30,11 @@ export default function Login(params) {
             setError(true);
             serErrorMessage(error.message);
             console.log(error);
+            setLoading(false);
           });
         }
 
+        if (loading) return <progress className="progress is-medium is-dark" max="100">45%</progress>
 
     return (
 				<div className="columns login">

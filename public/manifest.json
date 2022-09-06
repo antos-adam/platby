@@ -20,8 +20,8 @@
   ],
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#fafafa",
   "prefer_related_applications": true,
-  "background_color": "#ffffff",
+  "background_color": "#fafafa",
   "description": "Aplikace pro správu plateb."
 }

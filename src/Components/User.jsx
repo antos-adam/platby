@@ -35,7 +35,7 @@ const { data, loading, error } = useQuery(GET_USER, {
 });
 
 if (loading) return <progress className="progress is-medium is-dark" max="100">45%</progress>
-if (error) return <div>Error</div>
+if (error) return <div>Error {error.message}</div>
 
     return (
         <div className="columns">
@@ -60,7 +60,6 @@ if (error) return <div>Error</div>
             </div>}
             {user.paid &&
                 <div className="notification is-primary">
-                    <button className="delete"></button>
                     <p>Pro tento měsíc již máte zaplaceno.</p>
                 </div>
             }
