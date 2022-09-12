@@ -35,7 +35,7 @@ export default function Admin(params) {
         setReload(!reload)
         console.log(addResp)
     }
-    
+
     const ADD_PAYMENT = gql`
     mutation ($payment: AddPaymentInput!)
     {
@@ -107,7 +107,7 @@ export default function Admin(params) {
 
     if (loading) return <progress className="progress is-medium is-dark" max="100">45%</progress>
     if (error) return <div>Error {error.message}</div>
-    if(user.isAdmin !== true) return <div>Přístup odepřen!</div>
+    if (user.isAdmin !== true) return <div>Přístup odepřen!</div>
 
     return (
         <div className="columns">
@@ -119,55 +119,55 @@ export default function Admin(params) {
                                 Vložit platbu
                             </p>
                         </header>
-                            <div className="card-content">
-                                <div className="content">
-                                    <div className="field is-horizontal">
-                                        <div className="field-label is-normal">
-                                            <label for="" className="label">Jméno:</label>
-                                        </div>
-                                        <div className="field-body">
-                                            <div className="field">
-                                                <div className="control is-expanded">
-                                                    <div className="select is-fullwidth">
-                                                        <select onChange={e => newPayment.username = e.target.value} autofocus>
-                                                        {users.map(user =>
-                                                            <option value={user.username}>{user.name}</option>
+                        <div className="card-content">
+                            <div className="content">
+                                <div className="field is-horizontal">
+                                    <div className="field-label is-normal">
+                                        <label className="label">Jméno:</label>
+                                    </div>
+                                    <div className="field-body">
+                                        <div className="field">
+                                            <div className="control is-expanded">
+                                                <div className="select is-fullwidth">
+                                                    <select onChange={e => newPayment.username = e.target.value} value={newPayment.username}>
+                                                        {users.map((user, index) =>
+                                                            <option key={index} value={user.username}>{user.name}</option>
                                                         )}
                                                     </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="field is-horizontal">
-                                        <div className="field-label is-normal">
-                                            <label className="label">Měsíc:</label>
-                                        </div>
-                                        <div className="field-body">
-                                            <div className="field">
-                                                <div className="control is-expanded">
-                                                    <input onChange={e => newPayment.month = parseFloat(e.target.value)} className="input" type="number" min="1" max="12" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="field is-horizontal">
-                                        <div className="field-label is-normal">
-                                            <label for="" className="label">Rok:</label>
-                                        </div>
-                                        <div className="field-body">
-                                            <div className="field">
-                                                <div className="control is-expanded">
-                                                    <input onChange={e => newPayment.year = parseFloat(e.target.value)} className="input" type="number" min="2022" max="2035" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div className="field is-horizontal">
+                                    <div className="field-label is-normal">
+                                        <label className="label">Měsíc:</label>
+                                    </div>
+                                    <div className="field-body">
+                                        <div className="field">
+                                            <div className="control is-expanded">
+                                                <input onChange={e => newPayment.month = parseFloat(e.target.value)} value={newPayment.month} className="input" type="number" min="1" max="12" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="field is-horizontal">
+                                    <div className="field-label is-normal">
+                                        <label className="label">Rok:</label>
+                                    </div>
+                                    <div className="field-body">
+                                        <div className="field">
+                                            <div className="control is-expanded">
+                                                <input onChange={e => newPayment.year = parseFloat(e.target.value)} value={newPayment.year} className="input" type="number" min="2022" max="2035" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <footer className="card-footer">
-                                <button onClick={e => addPaymentHandler()} className="button is-fullwidth is-medium is-primary">Přidat platbu</button>
-                            </footer>
+                        </div>
+                        <footer className="card-footer">
+                            <button onClick={e => addPaymentHandler()} className="button is-fullwidth is-medium is-primary">Přidat platbu</button>
+                        </footer>
                     </div>
                 </div>
                 <div className="block">
@@ -186,7 +186,7 @@ export default function Admin(params) {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control is-expanded">
-                                                <input onChange={e => newUser.username = e.target.value} className="input" type="text" />
+                                                <input onChange={e => newUser.username = e.target.value} value={newUser.username} className="input" type="text" />
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +198,7 @@ export default function Admin(params) {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control is-expanded">
-                                                <input onChange={e => newUser.password = e.target.value} className="input" type="text" />
+                                                <input onChange={e => newUser.password = e.target.value} value={newUser.password} className="input" type="text" />
                                             </div>
                                         </div>
                                     </div>
@@ -210,7 +210,7 @@ export default function Admin(params) {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control is-expanded">
-                                                <input onChange={e => newUser.name = e.target.value} className="input" type="text" />
+                                                <input onChange={e => newUser.name = e.target.value} value={newUser.name} className="input" type="text" />
                                             </div>
                                         </div>
                                     </div>
@@ -236,64 +236,62 @@ export default function Admin(params) {
                                 Seznam plateb
                             </p>
                         </header>
-                        <form action="" method="post">
-                            <div className="card-content">
-                                <div className="content">
-                                    <div className="field is-horizontal">
-                                        <div className="field-label is-normal">
-                                            <label className="label">Jméno:</label>
-                                        </div>
-                                        <div className="field-body">
-                                            <div className="field">
-                                                <div className="control is-expanded">
-                                                    <div className="select is-fullwidth">
-                                                    <select onChange={e => setSelectedPayments(JSON.parse(e.target.value))} autofocus>
-                                                        {users.map(user =>
-                                                            <option value={JSON.stringify(user.payments)}>{user.name}</option>
+                        <div className="card-content">
+                            <div className="content">
+                                <div className="field is-horizontal">
+                                    <div className="field-label is-normal">
+                                        <label className="label">Jméno:</label>
+                                    </div>
+                                    <div className="field-body">
+                                        <div className="field">
+                                            <div className="control is-expanded">
+                                                <div className="select is-fullwidth">
+                                                    <select onChange={e => setSelectedPayments(JSON.parse(e.target.value))}>
+                                                        {users.map((user, index) =>
+                                                            <option key={index} value={JSON.stringify(user.payments)}>{user.name}</option>
                                                         )}
                                                     </select>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {/* <footer className="card-footer">
+                        </div>
+                        {/* <footer className="card-footer">
                                 <input className="button is-light is-medium is-fullwidth" type="submit" name="admin-showpayments" value="Zobrazit platby" />
                             </footer> */}
-                        </form>
                     </div>
                 </div >
                 {selectedPayments !== [] &&
-                <div className="block">
-                    <div className="card">
-                        <div className="card-content">
-                            <div className="content">
-                                <div className="table-container">
-                                    <table className="table is-fullwidth is-hoverable has-text-centered">
-                                        <thead>
-                                            <tr>
-                                                <th>Měsíc</th>
-                                                <th>Rok</th>
-                                                <th>Smazat</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {selectedPayments.map(payment =>(
+                    <div className="block">
+                        <div className="card">
+                            <div className="card-content">
+                                <div className="content">
+                                    <div className="table-container">
+                                        <table className="table is-fullwidth is-hoverable has-text-centered">
+                                            <thead>
                                                 <tr>
-                                                    <td>{payment.month}</td>
-                                                    <td>{payment.year}</td>
-                                                    <td>ve vývoji</td>
+                                                    <th>Měsíc</th>
+                                                    <th>Rok</th>
+                                                    <th>Smazat</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {selectedPayments.map((payment, index) => (
+                                                    <tr key={index}>
+                                                        <td>{payment.month}</td>
+                                                        <td>{payment.year}</td>
+                                                        <td>ve vývoji</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div >}
+                    </div >}
             </div >
             <div className="column is-full-mobile is-one-third-tablet">
                 <Profile user={user} />
