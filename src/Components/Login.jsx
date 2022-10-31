@@ -42,7 +42,7 @@ export default function Login(params) {
 
   async function GetJWT() {
     setLoading(true);
-    axios.post('https://platby.herokuapp.com/login', {
+    axios.post('https://api.platby.tk/login', {
       username: username,
       password: password
     }, { headers: { 'Content-Type': 'application/json' } })

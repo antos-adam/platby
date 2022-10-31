@@ -14,7 +14,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const TOKEN_STORAGE_KEY = "token-storage-key"
 const client = new ApolloClient(
 	{
-	uri: 'https://platby.herokuapp.com/graphql',
+	uri: 'https://api.platby.tk/graphql',
 	cache: new InMemoryCache(),
 	headers: {
 		authorization: `Bearer ${localStorage.getItem(TOKEN_STORAGE_KEY)}`
