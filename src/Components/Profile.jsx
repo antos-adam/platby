@@ -5,6 +5,7 @@ import { useAuthContext, LOG_OUT } from "../Providers/AuthProvider";
 
 export default function Profile(props) {
     const navigate = useNavigate();
+    // eslint-disable-next-line
     const [ {}, dispatch] = useAuthContext()
     const [password, setPassword] = useState("");
 
