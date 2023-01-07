@@ -5,7 +5,7 @@ import { useAuthContext, LOG_OUT } from "../Providers/AuthProvider";
 
 export default function Profile(props) {
     const navigate = useNavigate();
-    const [dispatch] = useAuthContext()
+    const [ {}, dispatch] = useAuthContext()
     const [password, setPassword] = useState("");
 
     const CHANGE_PASS = gql`
