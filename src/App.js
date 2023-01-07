@@ -1,7 +1,7 @@
 import Login from './Components/Login'
 import User from "./Components/User"
 import Admin from "./Components/Admin"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Routes, Route } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 

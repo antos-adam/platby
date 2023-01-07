@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { React, useState } from "react"
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 
 export default function Profile(props) {
     const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function Profile(props) {
         }
     }
     `
-    const [changePassword, resp] = useMutation(CHANGE_PASS)
+    const [changePassword] = useMutation(CHANGE_PASS)
 
     function changePasswordHandler() {
         changePassword({

@@ -27,13 +27,12 @@ export default function Login(params) {
     if(localStorage.getItem(TOKEN_STORAGE_KEY) !== null) {
       setSkip(false);
     }
-  })
+  }, [])
 
-  const { data, loadingGql, errorGql } = useQuery(GET_USER, {
+  const { loadingGql, errorGql } = useQuery(GET_USER, {
     skip: skip,
     onCompleted: (data) => {
         if (!errorGql) {
-          console.log(data)
           if(data.user.isAdmin) {navigate("admin")}
           else {navigate("user")}
         }
@@ -57,7 +56,6 @@ export default function Login(params) {
       .catch(function (error) {
         setError(true);
         serErrorMessage(error.message);
-        console.log(error);
         setLoading(false);
       });
   }

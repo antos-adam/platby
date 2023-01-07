@@ -1,14 +1,37 @@
 import Profile from "./Profile"
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 
 export default function Admin(params) {
-    const [user, setUser] = useState({});
-    const [users, setUsers] = useState([]);
-    const [selectedPayments, setSelectedPayments] = useState([]);
-    const [reload, setReload] = useState(false);
-    var newUser = {}
-    var newPayment = {}
+    const [newUser, setNewUser] = useState({})
+    const [newPayment, setNewPayment] = useState({});
+
+    const thisMonth = new Date().getMonth() + 1;
+    const thisYear = new Date().getFullYear();
+
+    const GET_USER = gql`
+    {
+        user 
+        {
+          _id
+            name
+            isAdmin
+          username
+          familyId
+          payments {month
+          year}
+        }
+        users
+        {
+          _id
+            name
+          username
+          payments {month
+          year}
+        }
+    }
+`   
+    const { data, loading, error } = useQuery(GET_USER);
     const ADD_USER = gql`
     mutation ($user: RegisterUserInput!)
     {
@@ -23,17 +46,16 @@ export default function Admin(params) {
         }
     }
     `
-    const [addUser, addResp] = useMutation(ADD_USER)
+    const [addUser] = useMutation(ADD_USER)
 
     function addUserHandler() {
-        console.log(newUser)
         addUser({
             variables: {
                 user: newUser
             }
+        }).finally(() => {
+            setNewUser({username: "", password: "", name: ""})
         })
-        setReload(!reload)
-        console.log(addResp)
     }
 
     const ADD_PAYMENT = gql`
@@ -50,64 +72,25 @@ export default function Admin(params) {
         }
     }
     `
-    const [addPayment, addPaymentResp] = useMutation(ADD_PAYMENT)
+    const [addPayment] = useMutation(ADD_PAYMENT)
 
     function addPaymentHandler() {
-        console.log(newPayment)
         addPayment({
             variables: {
                 payment: newPayment
             }
         })
-        setReload(!reload)
-        console.log(addPaymentResp)
     }
 
-    const GET_USER = gql`
-    {
-        user 
-        {
-          _id
-            name
-            isAdmin
-          username
-          familyId
-          payments {month
-          year}
-        }
-    }
-`
-    const { data, loading, error } = useQuery(GET_USER, {
-        onCompleted: (data) => {
-            setUser(data.user)
-        }
-    });
-
-    const GET_USERS = gql`
-    {
-        users
-        {
-          _id
-            name
-          username
-          payments {month
-          year}
-        }
-    }
-`
-    const { dataUsers, loadingUsers, errorUsers } = useQuery(GET_USERS, {
-        onCompleted: (data) => {
-            setUsers(data.users)
-            console.log(data)
-        }
-    }, [reload]);
-
-
-    //console.log(users.find(e => e.usename === selectedPayments))
+    useEffect(() => {
+        var today = new Date();
+        setNewPayment({...newPayment, month: today.getMonth() + 1, year: today.getFullYear()})
+    // eslint-disable-next-line
+    }, [])
 
     if (loading) return <progress className="progress is-medium is-dark" max="100">45%</progress>
     if (error) return <div>Error {error.message}</div>
-    if (user.isAdmin !== true) return <div>Přístup odepřen!</div>
+    if (data.user.isAdmin !== true) return <div>Přístup odepřen!</div>
 
     return (
         <div className="columns">
@@ -129,8 +112,9 @@ export default function Admin(params) {
                                         <div className="field">
                                             <div className="control is-expanded">
                                                 <div className="select is-fullwidth">
-                                                    <select onChange={e => newPayment.username = e.target.value} value={newPayment.username}>
-                                                        {users.map((user, index) =>
+                                                    <select onChange={e => setNewPayment({...newPayment, username: e.target.value}) } value={newPayment.username}>
+                                                        {!newPayment.username &&<option>Vyberte uživatele</option>}
+                                                        {data.users.map((user, index) =>
                                                             <option key={index} value={user.username}>{user.name}</option>
                                                         )}
                                                     </select>
@@ -146,7 +130,7 @@ export default function Admin(params) {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control is-expanded">
-                                                <input onChange={e => newPayment.month = parseFloat(e.target.value)} value={newPayment.month} className="input" type="number" min="1" max="12" />
+                                                <input onChange={e => setNewPayment({...newPayment, month: parseFloat(e.target.value) }) } value={newPayment.month} className="input" type="number" min="1" max="12" />
                                             </div>
                                         </div>
                                     </div>
@@ -158,7 +142,7 @@ export default function Admin(params) {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control is-expanded">
-                                                <input onChange={e => newPayment.year = parseFloat(e.target.value)} value={newPayment.year} className="input" type="number" min="2022" max="2035" />
+                                                <input onChange={e => setNewPayment({...newPayment, year: parseFloat(e.target.value) })} value={newPayment.year} className="input" type="number" min="2022" max="2035" />
                                             </div>
                                         </div>
                                     </div>
@@ -186,7 +170,7 @@ export default function Admin(params) {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control is-expanded">
-                                                <input onChange={e => newUser.username = e.target.value} value={newUser.username} className="input" type="text" />
+                                                <input onChange={e => setNewUser({...newUser, username: e.target.value})} value={newUser.username} className="input" type="text" />
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +182,7 @@ export default function Admin(params) {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control is-expanded">
-                                                <input onChange={e => newUser.password = e.target.value} value={newUser.password} className="input" type="text" />
+                                                <input onChange={e => setNewUser({...newUser, password: e.target.value})} value={newUser.password} className="input" type="text" />
                                             </div>
                                         </div>
                                     </div>
@@ -210,21 +194,19 @@ export default function Admin(params) {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control is-expanded">
-                                                <input onChange={e => newUser.name = e.target.value} value={newUser.name} className="input" type="text" />
+                                                <input onChange={e => setNewUser({...newUser, name: e.target.value})} value={newUser.name} className="input" type="text" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <footer className="card-footer">
-                                <div className="card-footer-item">
-                                    <button onClick={e => addUserHandler()} className="button is-left is-primary is-light is-medium is-fullwidth">Přidat člena</button>
-                                </div>
+                        </div>
+                        <footer className="card-footer">
+                                <button onClick={e => addUserHandler()} className="button is-fullwidth is-medium is-primary">Přidat člena</button>
                                 {/* <div className="card-footer-item">
                             <input className="button is-right is-danger is-light is-medium is-fullwidth" type="submit" name="admin-deleteuser" value="Odebrat člena"/>
                         </div> */}
-                            </footer>
-                        </div>
+                        </footer>
                     </div>
                 </div>
             </div >
@@ -246,9 +228,10 @@ export default function Admin(params) {
                                         <div className="field">
                                             <div className="control is-expanded">
                                                 <div className="select is-fullwidth">
-                                                    <select onChange={e => setSelectedPayments(JSON.parse(e.target.value))}>
-                                                        {users.map((user, index) =>
-                                                            <option key={index} value={JSON.stringify(user.payments)}>{user.name}</option>
+                                                    <select value={newPayment.username} onChange={e => setNewPayment({...newPayment, username: e.target.value})}>
+                                                        {!newPayment.username &&<option>Vyberte uživatele</option>}
+                                                        {data.users.map((user) =>
+                                                            <option key={user._id} value={user.username}>{user.name}</option>
                                                         )}
                                                     </select>
                                                 </div>
@@ -263,7 +246,7 @@ export default function Admin(params) {
                             </footer> */}
                     </div>
                 </div >
-                {selectedPayments !== [] &&
+                {newPayment.username &&
                     <div className="block">
                         <div className="card">
                             <div className="card-content">
@@ -274,15 +257,15 @@ export default function Admin(params) {
                                                 <tr>
                                                     <th>Měsíc</th>
                                                     <th>Rok</th>
-                                                    <th>Smazat</th>
+                                                    {/* <th>Smazat</th> */}
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {selectedPayments.map((payment, index) => (
-                                                    <tr key={index}>
+                                                {structuredClone(data.users.find(x => x.username === newPayment.username).payments).sort((a, b) => (a.month < b.month ? -1 : 1)).sort((a, b) => (a.year < b.year ? -1 : 1)).map((payment, index) => (
+                                                    <tr key={index} className={(thisMonth === payment.month && thisYear === payment.year) ? "is-selected" : ""}>
                                                         <td>{payment.month}</td>
                                                         <td>{payment.year}</td>
-                                                        <td>ve vývoji</td>
+                                                        {/* <td>ve vývoji</td> */}
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -294,7 +277,7 @@ export default function Admin(params) {
                     </div >}
             </div >
             <div className="column is-full-mobile is-one-third-tablet">
-                <Profile user={user} />
+                <Profile user={data.user} />
             </div >
         </div >
     )
