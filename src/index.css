@@ -1,3 +1,7 @@
+html {
+    background-color: #fafafa;
+}
+
 .login {
 	display: flex;
 	align-items: center;
