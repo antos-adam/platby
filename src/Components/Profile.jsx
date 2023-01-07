@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { React, useState } from "react"
 import { gql, useMutation } from "@apollo/client";
+import { useAuthContext, LOG_OUT } from "../Providers/AuthProvider";
 
 export default function Profile(props) {
     const navigate = useNavigate();
-	const TOKEN_STORAGE_KEY = "token-storage-key"
+    const [dispatch] = useAuthContext()
     const [password, setPassword] = useState("");
 
     const CHANGE_PASS = gql`
@@ -28,9 +29,8 @@ export default function Profile(props) {
 
 
     async function LogOut() {
-        console.log(localStorage.getItem(TOKEN_STORAGE_KEY));
-		localStorage.removeItem(TOKEN_STORAGE_KEY)
-		navigate("/");
+		dispatch({ type: LOG_OUT })
+		navigate("/")
 	}
 
     return (

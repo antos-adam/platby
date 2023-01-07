@@ -5,29 +5,18 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import 'bulma/css/bulma.min.css';
-
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { AuthProvider } from './Providers/AuthProvider';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const TOKEN_STORAGE_KEY = "token-storage-key"
-const client = new ApolloClient(
-	{
-	uri: 'https://api.platby.tk/graphql',
-	cache: new InMemoryCache(),
-	headers: {
-		authorization: `Bearer ${localStorage.getItem(TOKEN_STORAGE_KEY)}`
-	},
-  	credentials: 'include',
-});
 
 
 root.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
+	<AuthProvider>
       <App />
-    </ApolloProvider>
+	</AuthProvider>
   </React.StrictMode>
 );
 

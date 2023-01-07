@@ -2,8 +2,12 @@ import { React, useState, useEffect } from 'react'
 import axios from "axios";
 import { useNavigate } from 'react-router';
 import { useQuery, gql } from "@apollo/client"
+import { useAuthContext, SET_JWT, LOG_OUT } from "../Providers/AuthProvider"
 
-export default function Login(params) {
+import { Buffer } from "buffer"
+
+export default function Login() {
+  const [{jwt}, dispatch] = useAuthContext()
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -11,8 +15,6 @@ export default function Login(params) {
   const [errorMessage, serErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [skip, setSkip] = useState(true);
-
-  const TOKEN_STORAGE_KEY = "token-storage-key"
   const GET_USER = gql`
   {
       user 
@@ -23,11 +25,20 @@ export default function Login(params) {
   }
   `
 
-  useEffect(() => {
-    if(localStorage.getItem(TOKEN_STORAGE_KEY) !== null) {
-      setSkip(false);
-    }
-  }, [])
+	useEffect(() => {
+		if(jwt) {
+			console.log(jwt)
+			var today = new Date();
+			today.setHours(today.getHours() + 1);
+			if (today <= JSON.parse(Buffer.from(jwt.split(".")[1], "base64").toString()).exp * 1000) {
+				setSkip(false)
+			}
+			else {
+				dispatch({ type: LOG_OUT })
+			}
+		} 
+    // eslint-disable-next-line
+	}, [])
 
   const { loadingGql, errorGql } = useQuery(GET_USER, {
     skip: skip,
@@ -46,12 +57,11 @@ export default function Login(params) {
       password: password
     }, { headers: { 'Content-Type': 'application/json' } })
       .then(function (response) {
-        localStorage.setItem(TOKEN_STORAGE_KEY, response.data.access_token)
-        setError(false);
-        //setLoading(false);
+				dispatch({ type: SET_JWT, payload: {jwt: response.data.access_token} })
+				setError(false)
+        setLoading(false);
         if (response.data.isAdmin) { navigate("admin"); }
         else { navigate("user") }
-        window.location.reload();
       })
       .catch(function (error) {
         setError(true);
